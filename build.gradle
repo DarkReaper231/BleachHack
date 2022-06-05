@@ -1,6 +1,7 @@
 plugins {
 	id "fabric-loom" version "0.10-SNAPSHOT"
 	id "maven-publish"
+	id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -23,9 +24,17 @@ repositories {
 	maven {
 		url "https://jitpack.io"
 	}
+	maven {
+		url "https://maven.meteordev.org"
+	}
 }
 
 dependencies {
+	def library = { id ->
+		implementation(id) { exclude group: "org.slf4j" }
+		shadow(id) { exclude group: "org.slf4j" }
+	}
+
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
@@ -33,10 +42,12 @@ dependencies {
 
 	include(modImplementation("com.github.fzakaria:ascii85:1.2"))
 
-	include(modImplementation("com.github.jagrosh:DiscordIPC:ff8c5b73ee"))
 	include(modImplementation("org.json:json:20211205"))
 	include(modImplementation("com.kohlschutter.junixsocket:junixsocket-common:2.0.4"))
 	include(modImplementation("com.kohlschutter.junixsocket:junixsocket-native-common:2.0.4"))
+
+	// DiscordIPC
+	library "meteordevelopment:discord-ipc:1.1"
 }
 
 processResources {

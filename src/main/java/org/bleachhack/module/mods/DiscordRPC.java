@@ -8,10 +8,6 @@
  */
 package org.bleachhack.module.mods;
 
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bleachhack.BleachHack;
@@ -26,20 +22,14 @@ import org.bleachhack.util.BleachLogger;
 import org.bleachhack.util.io.BleachFileHelper;
 
 import com.google.gson.JsonElement;
-import com.jagrosh.discordipc.IPCClient;
-import com.jagrosh.discordipc.IPCListener;
-import com.jagrosh.discordipc.entities.RichPresence;
-import com.jagrosh.discordipc.entities.pipe.PipeStatus;
-import com.jagrosh.discordipc.exceptions.NoDiscordClientException;
+import meteordevelopment.discordipc.DiscordIPC;
+import meteordevelopment.discordipc.RichPresence;
 
 import net.minecraft.SharedConstants;
 import net.minecraft.item.ItemStack;
 
 public class DiscordRPC extends Module {
-
-	private IPCClient client;
-	private Thread startThread;
-
+	private static final RichPresence rpc = new RichPresence();
 	private String customText1 = "top text";
 	private String customText2 = "bottom text";
 
@@ -72,57 +62,36 @@ public class DiscordRPC extends Module {
 		tick = 0;
 		startTime = System.currentTimeMillis();
 
-		if (client == null) {
-			BleachLogger.logger.info("Initing Discord IPC...");
-			client = new IPCClient(956641956019187782L);
-			client.setListener(new IPCListener() {
-				@Override
-				public void onReady(IPCClient client) {
-					BleachLogger.logger.info("Connected to Discord!");
-				}
-			});
-		}
-
-		startThread = new Thread(() -> {
-			try {
-				client.connect();
-			} catch (NoDiscordClientException e) {
-				BleachLogger.error("Failed to connect to Discord!");
-				setEnabled(false);
-			}
-		});
-		startThread.start();
+		DiscordIPC.start(982829824341069845L, null);
+		BleachLogger.logger.info("Connected to Discord!");
 	}
 
 	@Override
 	public void onDisable(boolean inWorld) {
-		try {
-			startThread.join();
-			disconnect();
-		} catch (InterruptedException ignored) {}
+		DiscordIPC.stop();
 
 		super.onDisable(inWorld);
 	}
 
 	@BleachSubscribe
 	public void onTick(EventTick event) {
-		if (client.getStatus() != PipeStatus.CONNECTED)
-			return;
-
-		if (tick % 40 == 0) {
+		// Really bad way of refreshing
+		if (tick >= 200) {
 			boolean silent = getSetting(3).asToggle().getState();
-			RichPresence.Builder builder = new RichPresence.Builder()
-					.setLargeImage(silent ? "mc" : "dh", silent ? "Minecraft " + SharedConstants.getGameVersion().getName() : "DarkHack " + BleachHack.VERSION);
+
+			// Image
+			rpc.setLargeImage(silent ? "mc" : "dh", silent ? "Minecraft " + SharedConstants.getGameVersion().getName() : "DarkHack " + BleachHack.VERSION);
+			rpc.setSmallImage(silent ? null : "mc", silent ? null : "Minecraft " + SharedConstants.getGameVersion().getName());
 
 			// Top text
-			builder.setDetails(switch (getSetting(0).asMode().getMode()) {
+			rpc.setDetails(switch (getSetting(0).asMode().getMode()) {
 				case 0 ->"Playing " + (mc.getCurrentServerEntry() == null ? "Singleplayer" : mc.getCurrentServerEntry().address);
 				case 1 -> mc.getCurrentServerEntry() == null ? "Singleplayer" : mc.getCurrentServerEntry().address;
 				case 2 -> mc.getCurrentServerEntry() == null ? "Singleplayer" : "Multiplayer";
-				case 3 -> mc.player.getEntityName() + " Ontop!";
+				case 3 -> mc.player.getEntityName() + " on top!";
 				case 4 -> "Minecraft " + SharedConstants.getGameVersion().getName();
 				case 5 -> mc.player.getEntityName();
-				case 6 -> "<- bad client";
+				case 6 -> "<- spaghetti mess";
 				default -> customText1;
 			});
 
@@ -139,7 +108,7 @@ public class DiscordRPC extends Module {
 					: (currentItem.getCount() > 1 ? currentItem.getCount() + " " : "")
 					+ (currentItem.hasCustomName() ? customName : name);
 
-			builder.setState(switch (getSetting(1).asMode().getMode()) {
+			rpc.setState(switch (getSetting(1).asMode().getMode()) {
 				case 0 -> (int) mc.player.getHealth() + " hp - Holding " + itemName;
 				case 1 -> mc.player.getEntityName() + " - " + (int) mc.player.getHealth() + " hp";
 				case 2 -> "Holding " + itemName;
@@ -156,19 +125,16 @@ public class DiscordRPC extends Module {
 					default -> startTime;
 				};
 
-				builder.setStartTimestamp(OffsetDateTime.ofInstant(Instant.ofEpochMilli(time), ZoneOffset.systemDefault()));
+				rpc.setStart(time);
 			}
 
 			// Build
-			client.sendRichPresence(builder.build());
+			DiscordIPC.setActivity(rpc);
+
+			tick = 0;
 		}
 
 		tick++;
-	}
-
-	private void disconnect() {
-		if (client.getStatus() == PipeStatus.CONNECTED || client.getStatus() == PipeStatus.CONNECTING)
-			client.close();
 	}
 
 	public void setTopText(String text) {

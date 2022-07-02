@@ -3,7 +3,9 @@
 
 name: DarkHack Workflow
 
-on: push
+on:
+  push:
+    branches: [ 1.18.2 ]
 
 jobs:
   build-linux:
@@ -47,3 +49,4 @@ jobs:
         with:
           name: DarkHack-Windows
           path: build/libs/
+

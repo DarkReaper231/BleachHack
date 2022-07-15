@@ -24,7 +24,8 @@ import org.bleachhack.util.io.BleachFileHelper;
 public class CmdEmoji extends Command {
 
     public CmdEmoji() {
-        super("emoji", "Sends emoji to chat.", "emoji shrug | emoji angry | emoji wtf | emoji bruh | emoji dealwithit | emoji scared | emoji happy | emoji yay | emoji blush | emoji vibe | emoji doggo | emoji kitty | emoji party | emoji tableflip | emoji angryflip | emoji dontflip | emoji unflip", CommandCategory.MISC);
+        super("emoji", "Sends emoji to chat.", "emoji shrug | emoji smirk | emoji angry | emoji wtf | emoji bruh | emoji dealwithit | emoji scared | emoji happy | emoji yay | emoji blush | emoji vibe | emoji wink |  emoji doggo | emoji kitty | emoji kiss |  emoji party | emoji tableflip | emoji angryflip | emoji dontflip | emoji unflip | emoji zombie", CommandCategory.MISC,
+                "e");
     }
 
     @Override
@@ -35,6 +36,8 @@ public class CmdEmoji extends Command {
 
         if (args[0].equalsIgnoreCase("shrug")) {
             mc.player.networkHandler.sendPacket(new ChatMessageC2SPacket("¯\\_(ツ)_/¯"));
+        } else if (args[0].equalsIgnoreCase("smirk")) {
+            mc.player.networkHandler.sendPacket(new ChatMessageC2SPacket("(´°‿ʖ´°)"));
         } else if (args[0].equalsIgnoreCase("angry")) {
             mc.player.networkHandler.sendPacket(new ChatMessageC2SPacket("(ಠ益ಠ)"));
         } else if (args[0].equalsIgnoreCase("wtf")) {
@@ -53,10 +56,14 @@ public class CmdEmoji extends Command {
             mc.player.networkHandler.sendPacket(new ChatMessageC2SPacket("(✿◠‿◠)"));
         } else if (args[0].equalsIgnoreCase("vibe")) {
             mc.player.networkHandler.sendPacket(new ChatMessageC2SPacket("~(˘▾˘~)"));
+        } else if (args[0].equalsIgnoreCase("wink")) {
+            mc.player.networkHandler.sendPacket(new ChatMessageC2SPacket("(◕‿↼)"));
         } else if (args[0].equalsIgnoreCase("doggo")) {
             mc.player.networkHandler.sendPacket(new ChatMessageC2SPacket("(ᵔᴥᵔ)"));
         } else if (args[0].equalsIgnoreCase("kitty")) {
             mc.player.networkHandler.sendPacket(new ChatMessageC2SPacket("(^•ﻌ•^)"));
+        } else if (args[0].equalsIgnoreCase("kiss")) {
+            mc.player.networkHandler.sendPacket(new ChatMessageC2SPacket("(￣3￣)"));
         } else if (args[0].equalsIgnoreCase("party")) {
             mc.player.networkHandler.sendPacket(new ChatMessageC2SPacket("♪ ┗( ･o･)┓ ♪"));
         } else if (args[0].equalsIgnoreCase("tableflip")) {
@@ -67,6 +74,8 @@ public class CmdEmoji extends Command {
             mc.player.networkHandler.sendPacket(new ChatMessageC2SPacket("┳━┳ ¯\\_(ツ)"));
         } else if (args[0].equalsIgnoreCase("unflip")) {
             mc.player.networkHandler.sendPacket(new ChatMessageC2SPacket("┳━┳ ノ(°-°ノ)"));
+        } else if (args[0].equalsIgnoreCase("zombie")) {
+            mc.player.networkHandler.sendPacket(new ChatMessageC2SPacket("[¬°-°]¬"));
         } else {
             throw new CmdSyntaxException();
         }

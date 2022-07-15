@@ -68,7 +68,8 @@ public class NoRender extends Module {
 								new SettingToggle("Sound", false).withDesc("Removes the totem sound when a totem is used.")),
 						new SettingToggle("EG Curse", true).withDesc("Removes the elder guardian curse."),                         // 1-2
 						new SettingToggle("Maps", false).withDesc("Blocks mapart (useful if you're streaming)."),                  // 1-3
-						new SettingToggle("Skylight", false).withDesc("Disables skylight updates to reduce skylight lag.")),       // 1-4
+						new SettingToggle("Skylight", false).withDesc("Disables skylight updates to reduce skylight lag."),        // 1-4
+						new SettingToggle("Fog", false).withDesc("Disables fog and darkness effect.")),                            // 1-5
 				
 				new SettingToggle("Particles", true).withDesc("Removes certain particles from the world.").withChildren(           // 2
 						new SettingToggle("Campfires", true).withDesc("Removes campfire smoke particles."),                        // 2-0

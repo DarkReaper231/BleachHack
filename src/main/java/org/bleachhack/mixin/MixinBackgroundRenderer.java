@@ -26,18 +26,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(BackgroundRenderer.class)
 public class MixinBackgroundRenderer {
 
-	@Redirect(method = {
-			"render(Lnet/minecraft/client/render/Camera;FLnet/minecraft/client/world/ClientWorld;IF)V",
-			"applyFog(Lnet/minecraft/client/render/Camera;Lnet/minecraft/client/render/BackgroundRenderer$FogType;FZ)V"},
-			at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;hasStatusEffect(Lnet/minecraft/entity/effect/StatusEffect;)Z"))
-	private static boolean hasStatusEffect(LivingEntity entity, StatusEffect effect) {
-		if (effect == StatusEffects.BLINDNESS && ModuleManager.getModule(NoRender.class).isOverlayToggled(0)) {
-			return false;
-		}
-
-		return entity.hasStatusEffect(effect);
-	}
-
 	@Inject(method = "applyFog", at = @At("TAIL"))
 	private static void onApplyFog(Camera camera, BackgroundRenderer.FogType fogType, float viewDistance, boolean thickFog, CallbackInfo ci) {
 		if (ModuleManager.getModule(NoRender.class).isWorldToggled(5)) {

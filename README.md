@@ -1,9 +1,9 @@
 
-# BleachHack DarkReaper + Kweeme edition 
+# BleachHack DarkReaper edition
 
-DarkReaper's own skid of BleachHack for 1.19.2.
-DarkReaper made this to make Bleach compatible with meteor and even gone so far as changing prefix to + and ClickGui bind to right control.  
-He also gave it own visual flavour  
+My own skid of BleachHack for 1.19.2
+I made this to make Bleach compatible with meteor and even gone so far as changing prefix to + and ClickGui bind to right control  
+I also gave it own visual flavour 
 
 ## Showcase
 
@@ -66,7 +66,7 @@ Generate the needed files for your preferred IDE.
 
 ## Recommended Mods
 
-Here are some nice to have mods that are compatible with DarkHack (aka BleachHack), none of these require Fabric API.
+Here are some nice to have mods that are compatible with BleachHack, none of these require Fabric API.
 
 ### [Multiconnect](https://github.com/Earthcomputer/multiconnect) or [ViaFabric](https://github.com/ViaVersion/ViaFabric)
 Mods that allows you to connect to any 1.12-1.19 server from a 1.19 client.
